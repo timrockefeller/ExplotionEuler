@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 //import java.util.Iterator;
 
-public class TicTacToe {
+public class ttt{
     
     public static void main (String[] args){
         //gameplay
@@ -253,8 +253,8 @@ class Player_PC extends Player{
         Way root = new Way();
         this.ways.add(root);
         this.nextStop(b.clone(), root, 0, this.type);
-        int mindepth =  200;
-        int maxdepth = -200;
+        int mindepth =  19;
+        int maxdepth = -19;
         int value[][]= new int[3][3];
         for (int oi = 0; oi < this.ways.size(); oi++){
             Way ov = this.ways.get(oi);
@@ -306,7 +306,7 @@ class Player_PC extends Player{
                     if(!b.isFull())
                         this.nextStop(b.clone(), _way, depth+1, getOppoType(inType));
                     else if(wms != ChessType.BLANK)
-                        _way.stats=wms==this.type?(100-depth):(depth-100);
+                        _way.stats=wms==this.type?(10-depth):(depth-10);
                     b.setBoardF(new Position(x,y),ChessType.BLANK);
                 }
             }
@@ -363,6 +363,7 @@ class Game{
             this.gaming=false; 
             this.board.drawBoard();
             System.out.println("Draw!");
+            this.retry();
         }
     }
     
@@ -389,5 +390,13 @@ class Game{
         //end message
         this.board.drawBoard();
         System.out.println(type+" won the game !!!");
+        this.retry();
     }
+    
+    private void retry (){
+        System.out.println("Retry? (1/0)");
+        if(new Scanner(System.in).nextInt()==1)
+            this.run();
+    }
+    
 }
