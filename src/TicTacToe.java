@@ -8,6 +8,7 @@ public class TicTacToe{
     public static void main (String[] args){
         //gameplay
         Game game = new Game();
+        game.Init();
     }
     
 }
@@ -168,6 +169,7 @@ class Player_Human extends Player{
         System.out.print("input x and y (1-3): ");
         this.hand.x = input.nextInt() - 1;
         this.hand.y = input.nextInt() - 1;
+        //input.close();
     }
     
 }
@@ -238,8 +240,8 @@ class Player_PC extends Player{
         for ( int j = 0; j<3; j++) {
             if(b.getBoard(new Position(i, j))==ChessType.BLANK) {
                 imm++;
-                b.setBoardF(new Position(i, j), this.getOppoType(this.type));
-                if(b.judge() == this.getOppoType(this.type)) {
+                b.setBoardF(new Position(i, j), getOppoType(this.type));
+                if(b.judge() == getOppoType(this.type)) {
                     this.hand = new Position(i, j);
                     b.setBoardF(new Position(i, j), ChessType.BLANK);
                     System.out.println("nana."+(i+1)+(j+1));
@@ -253,8 +255,8 @@ class Player_PC extends Player{
         Way root = new Way();
         this.ways.add(root);
         this.nextStop(b.clone(), root, 0, this.type);
-        int mindepth =  19;
-        int maxdepth = -19;
+        //int mindepth =  19;
+        int maxdepth = -2147483648;
         int value[][]= new int[3][3];
         for (int oi = 0; oi < this.ways.size(); oi++){
             Way ov = this.ways.get(oi);
@@ -286,11 +288,11 @@ class Player_PC extends Player{
     
     private void nextStop(Board b,Way way,int depth,ChessType inType){
         boolean newWay = false;
-        boolean full = true;
+        //boolean full = true;
         for(int x = 0; x<3;x++){
             for(int y = 0; y<3;y++){
                 if(b.getBoard(new Position(x,y))==ChessType.BLANK){
-                    full = false;
+                    //full = false;
                     Way _way;
                     if ( newWay ) {
                         _way = way.clone();
@@ -304,7 +306,7 @@ class Player_PC extends Player{
                     b.setBoardF(new Position(x, y), inType);
                     ChessType wms=b.judge();
                     if(!b.isFull())
-                        this.nextStop(b.clone(), _way, depth+1, getOppoType(inType));
+                        this.nextStop(b.clone(), _way, depth+(wms==ChessType.BLANK?0:1), getOppoType(inType));
                     else if(wms != ChessType.BLANK)
                         _way.stats=wms==this.type?(10-depth):(depth-10);
                     b.setBoardF(new Position(x,y),ChessType.BLANK);
@@ -318,6 +320,10 @@ class Player_PC extends Player{
 class Game{
     
     public Game(){
+        //this.Init();
+    }
+
+    public void Init(){
         //init
         //set players
         Scanner input = new Scanner(System.in);
@@ -333,10 +339,11 @@ class Game{
         }else{
             this.players[1]= new Player_Human(ChessType.CROSS);
         }
+        //input.close();
         this.run();
     }
     
-    private int round;
+    //private int round;
 
     private Board board;
     
@@ -355,7 +362,7 @@ class Game{
         }
         if (this.turn == 1){
             this.turn = 0;
-            this.round += 1;
+            //this.round += 1;
         } else this.turn ++;
         //if full
         
@@ -372,7 +379,7 @@ class Game{
     }
     
     private void run(){
-        this.round = 0;
+        //this.round = 0;
         this.board = new Board();
         this.turn = 0;
         this.gaming = true;
@@ -395,8 +402,10 @@ class Game{
     
     private void retry (){
         System.out.println("Retry? (1/0)");
-        if(new Scanner(System.in).nextInt()==1)
+        Scanner input = new Scanner (System.in);
+        if(input.nextInt()==1)
             this.run();
+        //input.close();
     }
     
 }
